@@ -27,14 +27,23 @@ body {
     align-items: center;
     min-height: 100%;
 }
-
-
-[wm-flappy] {
+.panel{
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    height: 100%;
+    width: 100%;
+    padding: 15px;
+    gap: 3rem;
+}
+.configs{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.wm-flappy {
     position: relative;
     border: 5px solid dodgerblue;
-    height: 700px;
-    width: 1200px;
-    margin: 15px;
+    flex:1;
     background-color: deepskyblue;
     overflow: hidden;
 }
@@ -82,4 +91,9 @@ body {
     font-family: Pixel;
     font-size: 70px;
     z-index: 100;
+}
+.select{
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
 }

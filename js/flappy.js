@@ -17,7 +17,7 @@ function Barreira(reversa = false) {
 
 /* const b= new Barreira(false)
 b.setAltura(500)
-document.querySelector('[wm-flappy]').appendChild(b.elemento) */  
+document.querySelector('.wm-flappy').appendChild(b.elemento) */  
 
 
 
@@ -45,7 +45,7 @@ function ParDeBarreiras(altura, abertura, popsicaoNaTela) {
 } 
 
 /* const b= new ParDeBarreiras(500,300,1000)
-document.querySelector('[wm-flappy]').appendChild(b.elemento)  */
+document.querySelector('.wm-flappy').appendChild(b.elemento)  */
 
 function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
     this.pares = [
@@ -75,7 +75,7 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
 }
 
 /* const barreiras = new Barreiras(700, 400, 200, 400)
-const areaDoJogo = document.querySelector('[wm-flappy]')
+const areaDoJogo = document.querySelector('.wm-flappy')
 
 barreiras.pares.forEach( par => areaDoJogo.appendChild(par.elemento)) 
 
@@ -114,7 +114,7 @@ function Passaro(alturaJogo) {
 /* const barreiras = new Barreiras(700, 400, 200, 400)
 const passaro = new Passaro(700)
 
-const areaDoJogo = document.querySelector('[wm-flappy]')
+const areaDoJogo = document.querySelector('.wm-flappy')
 
 areaDoJogo.appendChild(passaro.elemento)
 barreiras.pares.forEach( par => areaDoJogo.appendChild(par.elemento)) 
@@ -137,7 +137,7 @@ setInterval(() => {
 /*  const barreiras = new Barreiras(700, 400, 200, 400)
 const passaro = new Passaro(700)
 
-const areaDoJogo = document.querySelector('[wm-flappy]')
+const areaDoJogo = document.querySelector('.wm-flappy')
 
 areaDoJogo.appendChild(passaro.elemento)
 barreiras.pares.forEach( par => areaDoJogo.appendChild(par.elemento))  */
@@ -170,7 +170,7 @@ function colidiu(passaro, barreiras) {
 
  function FlappyBird() {
     let pontos = 0
-    const areaDoJogo = document.querySelector('[wm-flappy]')
+    const areaDoJogo = document.querySelector('.wm-flappy')
     const altura = areaDoJogo.clientHeight
     const largura = areaDoJogo.clientWidth
 
