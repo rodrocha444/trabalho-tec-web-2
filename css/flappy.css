@@ -1,99 +1,81 @@
-@font-face {
-    font-family: 'Oswald';
-    src: url('fonts/Oswald-Regular.ttf') format('truetype');
-    font-family: 'Pixel';
-    src: url("fontes/Pixel.ttf");
+.titleGame {
+  margin-top: 26px;
 }
 
-* {
-    font-family: 'Oswald', sans-serif;
-    box-sizing: border-box;
+.game {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding: 26px 48px;
+  gap: 2.875rem;
 }
 
-html {
-    height: 100%;
+.configs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  max-width: 440px;
+  border: 1px solid var(--gray);
+  border-radius: 8px;
+  background-color: var(--blue-900);
+  padding: 1.125rem;
+  gap: 1rem;
 }
 
-body {
-    margin: 0;
-    background-color: #0D262D;
-    color: #fff;
-    height: 100%;
+.configs>h1 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.125rem;
 }
 
-.conteudo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100%;
-}
-.panel{
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-    height: 100%;
-    width: 100%;
-    padding: 15px;
-    gap: 3rem;
-}
-.configs{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-.wm-flappy {
-    position: relative;
-    border: 5px solid dodgerblue;
-    flex:1;
-    background-color: deepskyblue;
-    overflow: hidden;
+.formLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.passaro {
-    position: absolute;
-    width: 60px;
-    left: calc(50% - 30px);
+.formLine span{
+  font-size: 18px;
+  flex:1;
+}
+.formLine .selects{
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex:1.5;
+  
+}
+.formLine input[type="radio"]{
+  appearance: none;
+  background-color: var(--black);
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1rem;
+  height: 1rem;
+  border: 0.15em solid var(--black);
+  border-radius: 50%;
+  transition: background 0.3s;
 }
 
-.par-de-barreiras {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.formLine input[type="radio"]:checked{
+  background-color: var(--white);
 }
 
-.barreira {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.formLine input[type="text"]{
+  box-sizing: border-box;
+  color: var(--white);
+  flex:1.5;
+  background-color: var(--black);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: background 0.3s;
 }
 
-.barreira .borda {
-    height: 30px;
-    width: 130px;
-    background: linear-gradient(90deg, #639301, #A5E82E);
-    border: 2px solid #000;
-}
-
-.barreira .corpo {
-    height: 40px;
-    width: 110px;
-    background: linear-gradient(90deg, #639301, #A5E82E);
-    border-left: 2px solid #000;
-    border-right: 2px solid #000;
-}
-
-.progresso {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-family: Pixel;
-    font-size: 70px;
-    z-index: 100;
-}
-.select{
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
+.formLine input[type="text"]:focus{
+  outline: none;
+  background-color: var(--gray);
 }

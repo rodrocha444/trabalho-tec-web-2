@@ -2,113 +2,102 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Flappy Bird</title>
-    <link rel="stylesheet" href="css/flappy.css">
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="css/flappy.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/estiloFixo.css">
+
+  <title>Flappy Bird</title>
 </head>
 
-<body class="conteudo">
-    <h1>Flappy Bird</h1>
-    <div class="panel">
-        <div>
-            <h1>Configurações do jogo</h1>
-            <div  class="configs">
-                <span>Nome do jogador:</span>
-                <input type="text">
-                <span>Cenário do jogo:</span>
-                <div class="select">
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                </div>
-                <span>Intervalo entre abertura dos canos:</span>
-                <div class="select">
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                </div>
-                <span>Distância entre os canos:</span>
-                <div class="select">
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                </div>
-                <span>Velocidade do jogo:</span>
-                <input type="text">
-                <span>Personagens</span>
-                <input type="text">
-                <span>Tipo do jogo:</span>
-                <div class="select">
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                </div>
-                <span>Velocidade do personagem:</span>
-                <div class="select">
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                </div>
-                <span>Pontuação</span>
-                <div class="select">
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                    <div>
-                        <input type="radio" id="noturno" name="cenario-radio" value="noturno">
-                        <label for="noturno">Noturno</label><br>
-                    </div>
-                </div>
-            </div>
+<body>
+  <h1 class="titleGame">Flappy Bird</h1>
+  <div class="game">
+    <div class="configs">
+      <h1>Configurações do jogo</h1>
 
+      <div class="formLine">
+        <span>Nome do jogador:</span>
+        <input type="text">
+      </div>
 
-        </div>
-        <div class="wm-flappy">
+      <div class="formLine">
+        <span>Cenário do jogo:</span>
+        <span class="selects" onclick="alterarCenario()">
+          <input type="radio" name="cenario-radio" value="diurno" checked> Diurno
+          <input type="radio" name="cenario-radio" value="noturno"> Noturno
+        </span>
+      </div>
 
-            <!-- 
-           <img class="passaro" src="img/passaro.png" alt="passaro">
-            <div class="par-de-barreiras">
-                <div class="barreira">
-                    <div class="corpo"> </div>
-                    <div class="borda"></div>
-                </div>
-                <div class="barreira">
-                    <div class="borda"> </div>
-                    <div class="corpo"></div>
-                </div>
-            </div>
-            <div class="progresso"> 10 </div>   -->
-        </div>
+      <div class="formLine">
+        <span>Cenário do jogo:</span>
+        <input class="selects" type="range" name="abertura-canos" onchange="alterarAberturaCanos()" min="25" max="75">
+      </div>
+
+      <div class="formLine">
+        <span>Cenário do jogo:</span>
+        <span class="selects">
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+        </span>
+      </div>
+
+      <div class="formLine">
+        <span>Velocidade do jogo:</span>
+        <input type="text">
+      </div>
+
+      <div class="formLine">
+        <span>Personagens</span>
+        <input type="text">
+      </div>
+
+      <div class="formLine">
+        <span>Cenário do jogo:</span>
+        <span class="selects">
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+        </span>
+      </div>
+
+      <div class="formLine">
+        <span>Cenário do jogo:</span>
+        <span class="selects">
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+          <input type="radio" id="noturno" name="cenario-radi2" value="noturno"> Noturno
+        </span>
+      </div>
+
+      <div class="formLine">
+        <span>Cenário do jogo:</span>
+        <span class="selects">
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+        </span>
+      </div>
+
     </div>
+    <div class="wm-flappy">
+
+      <!-- 
+		   <img class="passaro" src="img/passaro.png" alt="passaro">
+			<div class="par-de-barreiras">
+				<div class="barreira">
+					<div class="corpo"> </div>
+					<div class="borda"></div>
+				</div>
+				<div class="barreira">
+					<div class="borda"> </div>
+					<div class="corpo"></div>
+				</div>
+			</div>
+			<div class="progresso"> 10 </div>   -->
+    </div>
+  </div>
 
 
-    <script src="js/flappy.js"></script>
+  <script src="js/flappy.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,40 @@
+:root {
+  --background: deepskyblue;
+  --border: dodgerblue;
+
+  --background-dark: #30393c;
+  --border-dark: #004867;
+
+  --blue-800: #0D262D;
+  --blue-900: #0a232a;
+
+  --green-300: #A5E82E;
+  --green-500: #639301;
+
+  --blue-1: #1095b4;
+  --blue-2: #004867;
+
+  --white: #fff;
+  --gray: #363636;
+  --black: #000;
+}
+
+* {
+  font-family: 'Calibri', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: var(--blue-800);
+  color: var(--white);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
