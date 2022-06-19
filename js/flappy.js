@@ -1,25 +1,3 @@
-function alterarCenario() {
-  let tema = document.querySelector('input[name="cenario-radio"]:checked').value;
-  let game = document.querySelector('.wm-flappy')
-  let canoParteSuperior = document.querySelectorAll('.barreira .borda')
-  let canoParteInferior = document.querySelectorAll('.barreira .corpo')
-  console.log(canoParteSuperior)
-  if(tema==="diurno"){
-    let gradienteCanos = "linear-gradient(90deg, var(--green-500), var(--green-300))"
-    game.style.background = "var(--background)";
-    game.style.borderColor = "var(--border)";
-    canoParteSuperior.forEach(e=>e.style.background = gradienteCanos)
-    canoParteInferior.forEach(e=>e.style.background = gradienteCanos)
-  }
-  else if(tema==="noturno"){
-    let gradienteCanos = "linear-gradient(90deg, var(--blue-2), var(--blue-1))"
-    game.style.background = "var(--background-dark)";
-    game.style.borderColor = "var(--border-dark)";
-    canoParteSuperior.forEach(e=>e.style.background = gradienteCanos)
-    canoParteInferior.forEach(e=>e.style.background = gradienteCanos)
-  }
-}
-
 function novoElemento(tagName, className) {
   const elemento = document.createElement(tagName)
   elemento.className = className
