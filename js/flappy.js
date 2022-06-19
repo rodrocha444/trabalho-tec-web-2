@@ -1,3 +1,47 @@
+let aberturaGlobal = 250
+function alterarAberturaDosCanos(){
+  let abertura = document.querySelector('input[name="abertura-canos-radio"]:checked').value
+  console.log(abertura)
+  abertura == 'facil' && (aberturaGlobal = 350)
+  abertura == 'media' && (aberturaGlobal = 250)
+  abertura == 'dificil' && (aberturaGlobal = 200)
+}
+function restart(){
+  let flappy=document.querySelector('.wm-flappy')
+  let game = document.querySelector('.game')
+  let restart=document.querySelector('.restart-dialog')
+  let newFlappy = document.createElement('div')
+  newFlappy.classList.add('wm-flappy')
+  
+  flappy.remove()
+  restart.remove()
+  game.appendChild(newFlappy)
+  new FlappyBird().start()
+}
+function abrirRestartDialog(){
+  let restartDialog = document.createElement('div');
+  let restartButton = document.createElement('button');
+  let game = document.querySelector(".wm-flappy")
+  let positions = game.getBoundingClientRect()
+  
+
+  restartDialog.classList.add('restart-dialog')
+  restartDialog.appendChild(restartButton);
+  restartDialog.style.position = 'absolute';
+  restartDialog.style.top= positions.top+'px';
+  restartDialog.style.height = positions.height+'px';
+  restartDialog.style.left = positions.left+'px';
+  restartDialog.style.backgroundColor = '#0008';
+  restartDialog.style.width = positions.width+'px';
+  restartDialog.style.display = 'flex';
+  restartDialog.style.justifyContent = 'center';
+  restartDialog.style.alignItems = 'center';
+  
+  restartButton.innerHTML="Restart"
+  restartButton.style.padding = "15px 25px"
+  restartButton.onclick = restart;
+  document.body.appendChild(restartDialog);
+}
 function alterarCenario() {
   let tema = document.querySelector('input[name="cenario-radio"]:checked').value;
   let game = document.querySelector('.wm-flappy')
@@ -197,7 +241,7 @@ function FlappyBird() {
   const largura = areaDoJogo.clientWidth
 
   const progresso = new Progresso()
-  const barreiras = new Barreiras(altura, largura, 200, 400,
+  const barreiras = new Barreiras(altura, largura, aberturaGlobal, 400,
     () => progresso.atualizarPontos(++pontos))
 
   const passaro = new Passaro(altura)
@@ -213,6 +257,7 @@ function FlappyBird() {
 
       if (colidiu(passaro, barreiras)) {
         clearInterval(temporizador)
+        abrirRestartDialog()
       }
     }, 20)
   }

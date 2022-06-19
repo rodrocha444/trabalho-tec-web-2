@@ -31,8 +31,12 @@
       </div>
 
       <div class="formLine">
-        <span>Cenário do jogo:</span>
-        <input class="selects" type="range" name="abertura-canos" onchange="alterarAberturaCanos()" min="25" max="75">
+        <span>Abertura dos Canos:</span>
+        <span class="selects" onclick="alterarAberturaDosCanos()">
+          <input type="radio" name="abertura-canos-radio" value="facil" > Fácil
+          <input type="radio" name="abertura-canos-radio" value="media" checked> Média
+          <input type="radio" name="abertura-canos-radio" value="dificil" > Dificil
+        </span>
       </div>
 
       <div class="formLine">
