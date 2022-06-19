@@ -15,7 +15,7 @@
   <h1 class="titleGame">Flappy Bird</h1>
   <div class="game">
     <div class="configs">
-      <h1>Configurações do jogo</h1>
+      <h1 onclick="test()">Configurações do jogo</h1>
 
       <div class="formLine">
         <span>Nome do jogador:</span>
@@ -24,7 +24,7 @@
 
       <div class="formLine">
         <span>Cenário do jogo:</span>
-        <span class="selects" onclick="alterarCenario()">
+        <span class="selects" onclick="updateCenario()">
           <input type="radio" name="cenario-radio" value="diurno" checked> Diurno
           <input type="radio" name="cenario-radio" value="noturno"> Noturno
         </span>
@@ -32,7 +32,11 @@
 
       <div class="formLine">
         <span>Cenário do jogo:</span>
-        <input class="selects" type="range" name="abertura-canos" onchange="alterarAberturaCanos()" min="25" max="75">
+        <span class="selects" onclick="updateAberturaCanos()">
+          <input type="radio" name="abertura-canos-radio" value="facil"> Fácil
+          <input type="radio" name="abertura-canos-radio" value="media" checked> Média
+          <input type="radio" name="abertura-canos-radio" value="dificil"> Dificil
+        </span>
       </div>
 
       <div class="formLine">
@@ -97,6 +101,9 @@
   </div>
 
 
+  <script src="js/variaveisDoGame.js"></script>
+  <script src="js/getElements.js"></script>
+  <script src="js/configs.js"></script>
   <script src="js/flappy.js"></script>
 </body>
 
