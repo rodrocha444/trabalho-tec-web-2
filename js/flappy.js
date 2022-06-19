@@ -1,10 +1,12 @@
-let aberturaGlobal = 250
+let aberturaGlobal = 200
+let temaGlobal = 'diurno'
+console.log(document.querySelector('input[name="cenario-radio"]:checked').value)
 function alterarAberturaDosCanos(){
   let abertura = document.querySelector('input[name="abertura-canos-radio"]:checked').value
   console.log(abertura)
-  abertura == 'facil' && (aberturaGlobal = 350)
-  abertura == 'media' && (aberturaGlobal = 250)
-  abertura == 'dificil' && (aberturaGlobal = 200)
+  abertura == 'facil' && (aberturaGlobal = 250)
+  abertura == 'media' && (aberturaGlobal = 200)
+  abertura == 'dificil' && (aberturaGlobal = 175)
 }
 function restart(){
   let flappy=document.querySelector('.wm-flappy')
@@ -14,9 +16,15 @@ function restart(){
   newFlappy.classList.add('wm-flappy')
   
   flappy.remove()
+  
   restart.remove()
   game.appendChild(newFlappy)
-  new FlappyBird().start()
+  
+  let newGame = new FlappyBird().start()
+  alterarCenario()
+  
+  
+  
 }
 function abrirRestartDialog(){
   let restartDialog = document.createElement('div');
@@ -42,12 +50,13 @@ function abrirRestartDialog(){
   restartButton.onclick = restart;
   document.body.appendChild(restartDialog);
 }
+
 function alterarCenario() {
   let tema = document.querySelector('input[name="cenario-radio"]:checked').value;
+  temaGlobal = tema;
   let game = document.querySelector('.wm-flappy')
   let canoParteSuperior = document.querySelectorAll('.barreira .borda')
   let canoParteInferior = document.querySelectorAll('.barreira .corpo')
-  console.log(canoParteSuperior)
   if(tema==="diurno"){
     let gradienteCanos = "linear-gradient(90deg, var(--green-500), var(--green-300))"
     game.style.background = "var(--background)";
