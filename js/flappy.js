@@ -1,78 +1,3 @@
-let aberturaGlobal = 200
-let temaGlobal = 'diurno'
-console.log(document.querySelector('input[name="cenario-radio"]:checked').value)
-function alterarAberturaDosCanos(){
-  let abertura = document.querySelector('input[name="abertura-canos-radio"]:checked').value
-  console.log(abertura)
-  abertura == 'facil' && (aberturaGlobal = 250)
-  abertura == 'media' && (aberturaGlobal = 200)
-  abertura == 'dificil' && (aberturaGlobal = 175)
-}
-function restart(){
-  let flappy=document.querySelector('.wm-flappy')
-  let game = document.querySelector('.game')
-  let restart=document.querySelector('.restart-dialog')
-  let newFlappy = document.createElement('div')
-  newFlappy.classList.add('wm-flappy')
-  
-  flappy.remove()
-  
-  restart.remove()
-  game.appendChild(newFlappy)
-  
-  let newGame = new FlappyBird().start()
-  alterarCenario()
-  
-  
-  
-}
-function abrirRestartDialog(){
-  let restartDialog = document.createElement('div');
-  let restartButton = document.createElement('button');
-  let game = document.querySelector(".wm-flappy")
-  let positions = game.getBoundingClientRect()
-  
-
-  restartDialog.classList.add('restart-dialog')
-  restartDialog.appendChild(restartButton);
-  restartDialog.style.position = 'absolute';
-  restartDialog.style.top= positions.top+'px';
-  restartDialog.style.height = positions.height+'px';
-  restartDialog.style.left = positions.left+'px';
-  restartDialog.style.backgroundColor = '#0008';
-  restartDialog.style.width = positions.width+'px';
-  restartDialog.style.display = 'flex';
-  restartDialog.style.justifyContent = 'center';
-  restartDialog.style.alignItems = 'center';
-  
-  restartButton.innerHTML="Restart"
-  restartButton.style.padding = "15px 25px"
-  restartButton.onclick = restart;
-  document.body.appendChild(restartDialog);
-}
-
-function alterarCenario() {
-  let tema = document.querySelector('input[name="cenario-radio"]:checked').value;
-  temaGlobal = tema;
-  let game = document.querySelector('.wm-flappy')
-  let canoParteSuperior = document.querySelectorAll('.barreira .borda')
-  let canoParteInferior = document.querySelectorAll('.barreira .corpo')
-  if(tema==="diurno"){
-    let gradienteCanos = "linear-gradient(90deg, var(--green-500), var(--green-300))"
-    game.style.background = "var(--background)";
-    game.style.borderColor = "var(--border)";
-    canoParteSuperior.forEach(e=>e.style.background = gradienteCanos)
-    canoParteInferior.forEach(e=>e.style.background = gradienteCanos)
-  }
-  else if(tema==="noturno"){
-    let gradienteCanos = "linear-gradient(90deg, var(--blue-2), var(--blue-1))"
-    game.style.background = "var(--background-dark)";
-    game.style.borderColor = "var(--border-dark)";
-    canoParteSuperior.forEach(e=>e.style.background = gradienteCanos)
-    canoParteInferior.forEach(e=>e.style.background = gradienteCanos)
-  }
-}
-
 function novoElemento(tagName, className) {
   const elemento = document.createElement(tagName)
   elemento.className = className
@@ -89,12 +14,6 @@ function Barreira(reversa = false) {
   this.setAltura = altura => corpo.style.height = `${altura}px`
 
 }
-
-/* const b= new Barreira(false)
-b.setAltura(500)
-document.querySelector('.wm-flappy').appendChild(b.elemento) */
-
-
 
 function ParDeBarreiras(altura, abertura, popsicaoNaTela) {
   this.elemento = novoElemento('div', 'par-de-barreiras')
@@ -119,9 +38,6 @@ function ParDeBarreiras(altura, abertura, popsicaoNaTela) {
   this.setX(popsicaoNaTela)
 }
 
-/* const b= new ParDeBarreiras(500,300,1000)
-document.querySelector('.wm-flappy').appendChild(b.elemento)  */
-
 function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
   this.pares = [
     new ParDeBarreiras(altura, abertura, largura),
@@ -130,40 +46,35 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
     new ParDeBarreiras(altura, abertura, largura + espaco * 3)
   ]
 
-  const deslocamento = 3
+  const deslocamento = velocidadeDoJogo
+  let indexAtual = 0;
   this.animar = () => {
-    this.pares.forEach(par => {
+    this.pares.forEach((par, index, array) => {
       par.setX(par.getX() - deslocamento)
 
       if (par.getX() < -par.getLargura()) {
         par.setX(par.getX() + espaco * this.pares.length)
         par.sortearAbertura()
       }
-      const meio = largura / 2
-      const cruzouMeio = par.getX() + deslocamento >= meio
-        && par.getX() < meio
-      if (cruzouMeio) {
+      const posPassaro = Math.floor(getComputedStyle(getPassaro()).getPropertyValue('left').split('px')[0])
+
+      if ((posPassaro >= par.getX()) && index == indexAtual) {
+        if (indexAtual < array.length - 1)
+          indexAtual += 1;
+        else
+          indexAtual = 0;
         notificarPonto()
       }
+
     })
   }
 }
-
-/* const barreiras = new Barreiras(700, 400, 200, 400)
-const areaDoJogo = document.querySelector('.wm-flappy')
-
-barreiras.pares.forEach( par => areaDoJogo.appendChild(par.elemento)) 
-
-setInterval(() => {
-    barreiras.animar()
-},20)  */
-
 
 function Passaro(alturaJogo) {
   let voando = false
 
   this.elemento = novoElemento('img', 'passaro')
-  this.elemento.src = 'img/passaro.png'
+  this.elemento.src = personagemSrc
 
   this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
   this.setY = y => this.elemento.style.bottom = `${y}px`
@@ -172,7 +83,7 @@ function Passaro(alturaJogo) {
   window.onkeyup = e => voando = false
 
   this.animar = () => {
-    const novoY = this.getY() + (voando ? 8 : -5)
+    const novoY = this.getY() + (voando ? velocidadeDoPersonagem[0] : velocidadeDoPersonagem[1])
     const alturaMaxima = alturaJogo - this.elemento.clientWidth
 
     if (novoY <= 0) {
@@ -186,37 +97,14 @@ function Passaro(alturaJogo) {
   this.setY(alturaJogo / 2)
 }
 
-/* const barreiras = new Barreiras(700, 400, 200, 400)
-const passaro = new Passaro(700)
-
-const areaDoJogo = document.querySelector('.wm-flappy')
-
-areaDoJogo.appendChild(passaro.elemento)
-barreiras.pares.forEach( par => areaDoJogo.appendChild(par.elemento)) 
-
-setInterval(() => {
-      barreiras.animar()
-      passaro.animar() 
-},20) */
-
-
 function Progresso() {
 
   this.elemento = novoElemento('span', 'progresso')
-  this.atualizarPontos = pontos => {
-    this.elemento.innerHTML = pontos
+  this.atualizarPontos = () => {
+    this.elemento.innerHTML = pontosDoGame
   }
   this.atualizarPontos(0)
 }
-
-/*  const barreiras = new Barreiras(700, 400, 200, 400)
-const passaro = new Passaro(700)
-
-const areaDoJogo = document.querySelector('.wm-flappy')
-
-areaDoJogo.appendChild(passaro.elemento)
-barreiras.pares.forEach( par => areaDoJogo.appendChild(par.elemento))  */
-
 
 function estaoSobrepostos(elementoA, elementoB) {
 
@@ -244,14 +132,16 @@ function colidiu(passaro, barreiras) {
 }
 
 function FlappyBird() {
-  let pontos = 0
   const areaDoJogo = document.querySelector('.wm-flappy')
   const altura = areaDoJogo.clientHeight
   const largura = areaDoJogo.clientWidth
 
   const progresso = new Progresso()
-  const barreiras = new Barreiras(altura, largura, aberturaGlobal, 400,
-    () => progresso.atualizarPontos(++pontos))
+  const barreiras = new Barreiras(altura, largura, aberturaDosCanos, distanciaEntreCanos,
+    () => {
+      pontosDoGame += parseInt(incrementoPontuacao);
+      progresso.atualizarPontos()
+    })
 
   const passaro = new Passaro(altura)
 
@@ -259,16 +149,28 @@ function FlappyBird() {
   areaDoJogo.appendChild(passaro.elemento)
   barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
 
+  updateCenario()
+
   this.start = () => {
     const temporizador = setInterval(() => {
       barreiras.animar()
       passaro.animar()
-
-      if (colidiu(passaro, barreiras)) {
+      if (colidiu(passaro, barreiras) && tipoDeJogo=='normal') {
         clearInterval(temporizador)
-        abrirRestartDialog()
+        let botaoRestart = document.createElement('button')
+        botaoRestart.innerHTML = "Restart"
+        document.body.appendChild(botaoRestart)
+        botaoRestart.onclick = () => {
+          barreiras.pares.forEach(e => e.elemento.remove())
+          passaro.elemento.remove()
+          progresso.elemento.remove()
+          botaoRestart.remove()
+          pontosDoGame = 0
+          new FlappyBird().start()
+        }
       }
     }, 20)
   }
 }
+
 new FlappyBird().start() 
