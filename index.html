@@ -24,15 +24,15 @@
 
       <div class="formLine">
         <span>Cenário do jogo:</span>
-        <span class="selects" onclick="updateCenario()">
+        <span class="selects" onchange="updateCenario()">
           <input type="radio" name="cenario-radio" value="diurno" checked> Diurno
           <input type="radio" name="cenario-radio" value="noturno"> Noturno
         </span>
       </div>
 
       <div class="formLine">
-        <span>Cenário do jogo:</span>
-        <span class="selects" onclick="updateAberturaCanos()">
+        <span>Abertura entre Canos:</span>
+        <span class="selects" onchange="updateAberturaCanos()">
           <input type="radio" name="abertura-canos-radio" value="facil"> Fácil
           <input type="radio" name="abertura-canos-radio" value="media" checked> Média
           <input type="radio" name="abertura-canos-radio" value="dificil"> Dificil
@@ -40,44 +40,52 @@
       </div>
 
       <div class="formLine">
-        <span>Cenário do jogo:</span>
-        <span class="selects">
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+        <span>Distância entre canos:</span>
+        <span class="selects" onchange="updateDistanciaEntreCanos()">
+          <input type="radio" name="distancia-entre-canos-radio" value="facil"> Fácil
+          <input type="radio" name="distancia-entre-canos-radio" value="media" checked> Média
+          <input type="radio" name="distancia-entre-canos-radio" value="dificil"> Dificil
         </span>
       </div>
 
       <div class="formLine">
         <span>Velocidade do jogo:</span>
-        <input type="text">
+        <span class="selects">
+          1<input value="3" name="velocidade-do-jogo" type="range" min="1" max="10" onchange="updateVelocidadeDoJogo()">10
+        </span>
       </div>
 
       <div class="formLine">
         <span>Personagens</span>
-        <input type="text">
+        <select class="selects" name="personagem-select" onchange="updatePersonagem()">
+          <option value="img/passaro.png">Passaro</option>
+          <option value="img/mario.png">Mario</option>
+        </select>
       </div>
 
       <div class="formLine">
-        <span>Cenário do jogo:</span>
-        <span class="selects">
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+        <span>Tipo jogo:</span>
+        <span class="selects" onchange="udpateModoDeJogo()"">
+          <input type="radio" name="tipo-de-jogo" value="normal" checked> Normal
+          <input type="radio" name="tipo-de-jogo" value="treino"> Treino
         </span>
       </div>
 
       <div class="formLine">
-        <span>Cenário do jogo:</span>
-        <span class="selects">
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
-          <input type="radio" id="noturno" name="cenario-radi2" value="noturno"> Noturno
+        <span>Velocidade do Personagem:</span>
+        <span class="selects" onchange="updateVelocidadeDoPersonagem()">
+          <input type="radio" name="velocidade-do-personagem-radio" value="baixa"> Baixa
+          <input type="radio" name="velocidade-do-personagem-radio" value="media" checked> Média
+          <input type="radio" name="velocidade-do-personagem-radio" value="alta"> Alta
         </span>
       </div>
 
       <div class="formLine">
-        <span>Cenário do jogo:</span>
-        <span class="selects">
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
-          <input type="radio" id="noturno" name="cenario-radio2" value="noturno"> Noturno
+        <span>Pontuacao:</span>
+        <span class="selects" onchange="updateIncrementoPontuacao()">
+          <input type="radio" name="pontuacao-radio" value="1" checked> 1
+          <input type="radio" name="pontuacao-radio" value="10" > 10
+          <input type="radio" name="pontuacao-radio" value="100"> 100
         </span>
       </div>
 
