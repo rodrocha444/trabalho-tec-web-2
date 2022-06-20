@@ -130,7 +130,32 @@ function colidiu(passaro, barreiras) {
   return colidiu
 
 }
+function GameOverDialog(barreiras,passaro,progresso) {
+  let GameOverDiv = document.createElement('div')
+  let botaoRestart = document.createElement('button')
+  let pontuacao = document.createElement('h1')
+  let nomeJogador = document.querySelector('input[name="nome-do-jogador"]').value
 
+  GameOverDiv.classList.add('gameover')
+  botaoRestart.classList.add('restart')
+
+  botaoRestart.innerHTML = "Restart"
+  pontuacao.innerHTML= `${nomeJogador} - ${pontosDoGame} pontos`;
+
+  GameOverDiv.appendChild(pontuacao)
+  GameOverDiv.appendChild(botaoRestart)
+
+  document.querySelector('.wm-flappy').appendChild(GameOverDiv)
+
+  botaoRestart.onclick = () => {
+    barreiras.pares.forEach(e => e.elemento.remove())
+    passaro.elemento.remove()
+    progresso.elemento.remove()
+    GameOverDiv.remove()
+    pontosDoGame = 0
+    new FlappyBird().start()
+  }
+}
 function FlappyBird() {
   const areaDoJogo = document.querySelector('.wm-flappy')
   const altura = areaDoJogo.clientHeight
@@ -155,19 +180,11 @@ function FlappyBird() {
     const temporizador = setInterval(() => {
       barreiras.animar()
       passaro.animar()
-      if (colidiu(passaro, barreiras) && tipoDeJogo=='normal') {
+      if (colidiu(passaro, barreiras) && tipoDeJogo == 'normal') {
         clearInterval(temporizador)
-        let botaoRestart = document.createElement('button')
-        botaoRestart.innerHTML = "Restart"
-        document.body.appendChild(botaoRestart)
-        botaoRestart.onclick = () => {
-          barreiras.pares.forEach(e => e.elemento.remove())
-          passaro.elemento.remove()
-          progresso.elemento.remove()
-          botaoRestart.remove()
-          pontosDoGame = 0
-          new FlappyBird().start()
-        }
+        progresso.elemento.remove()
+        GameOverDialog(barreiras,passaro,progresso)
+        
       }
     }, 20)
   }
