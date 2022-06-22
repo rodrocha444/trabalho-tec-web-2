@@ -1,11 +1,40 @@
-function Item() {
+function BackToNormalGame(idTimeout,modo) {
+  clearTimeout(idTimeout);
+  getPassaro().style.filter = ""
+  modo =='treino' || (tipoDeJogo = 'normal')
+  let elemento = document.querySelector('.tempoInvencibilidade')
+  elemento && elemento.remove()
+}
+function ficarInvencivel(time,modo) {
+  let timeInMiliseconds = time * 1000
+  let timeElemento = document.createElement('h1');
+  let elemento = document.createElement('h1')
+
+  timeElemento.innerHTML = time
+  elemento.innerHTML = 'Tempo de Invencibilidade Restante:'
+  elemento.classList.add('tempoInvencibilidade')
+
+  elemento.appendChild(timeElemento)
+  getGame().appendChild(elemento)
+
+  setInterval(() => { timeElemento.innerHTML -= 1 }, 1000)
+  tipoDeJogo = 'treino'
+  getPassaro().style.filter = "invert(1)"
+
+  return setTimeout(() => {
+    BackToNormalGame(modo)
+  }, timeInMiliseconds)
+}
+
+function Item(img, acao) {
   this.getX = () => parseInt(this.elemento.style.left.split('px')[0])
   this.setX = x => this.elemento.style.left = `${x}px`
   this.setY = y => this.elemento.style.top = `${y}px`
 
   this.elemento = document.createElement('div');
   this.elemento.classList.add('itemEspecial');
-  this.elemento.style.backgroundImage = "url('img/moeda.png')";
+  this.elemento.style.backgroundImage = img;
+  this.acao = acao
 }
 
 function novoElemento(tagName, className) {
@@ -55,27 +84,46 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
     new ParDeBarreiras(altura, abertura, largura + espaco * 2),
     new ParDeBarreiras(altura, abertura, largura + espaco * 3)
   ]
-  this.moeda = new Item();
+  this.moeda = new Item("url('img/moeda.png')", () => notificarPonto(10 * incrementoPontuacao));
+  this.up = new Item("url('img/up.png')", () => ficarInvencivel(tempoDeInvencibilidadeDoPassaro,tipoDeJogo));
 
   const deslocamento = velocidadeDoJogo
   let indexAtual = 0;
-
+  let idTimeout = 0;
   let posicaoInicialMoedaX = this.pares[getRandomIntInclusive(0, 3)].getX() - espaco / 2 + 50;
   let posicaoInicialMoedaY = getRandomIntInclusive(0, getGame().clientHeight - 50)
+
+  let posicaoInicialUpX = this.pares[getRandomIntInclusive(0, 3)].getX() - espaco / 2 + 50;
+  let posicaoInicialUpY = getRandomIntInclusive(0, getGame().clientHeight - 50)
 
   this.moeda.setY(posicaoInicialMoedaY)
   this.moeda.setX(posicaoInicialMoedaX)
 
+  this.up.setY(posicaoInicialUpY)
+  this.up.setX(posicaoInicialUpX)
+
   this.animar = () => {
 
     this.moeda.setX(this.moeda.getX() - deslocamento)
-    if(estaoSobrepostos(getPassaro(),this.moeda.elemento)){
+    if (estaoSobrepostos(getPassaro(), this.moeda.elemento)) {
+
+      this.moeda.acao();
       this.moeda.setX(this.moeda.getX() + espaco * getRandomIntInclusive(4, 7));
-      notificarPonto(10*incrementoPontuacao)
     }
     if (this.moeda.getX() < -50) {
       this.moeda.setX(this.moeda.getX() + espaco * getRandomIntInclusive(4, 7))
       this.moeda.setY(getRandomIntInclusive(0, getGame().clientHeight - 50))
+    }
+
+    this.up.setX(this.up.getX() - deslocamento)
+    if (estaoSobrepostos(getPassaro(), this.up.elemento)) {
+      BackToNormalGame(idTimeout);
+      idTimeout = this.up.acao()
+      this.up.setX(this.up.getX() + espaco * getRandomIntInclusive(4, 7));
+    }
+    if (this.up.getX() < -50) {
+      this.up.setX(this.up.getX() + espaco * getRandomIntInclusive(4, 7))
+      this.up.setY(getRandomIntInclusive(0, getGame().clientHeight - 50))
     }
 
     this.pares.forEach((par, index, array) => {
@@ -103,9 +151,10 @@ function Passaro(alturaJogo) {
 
   this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
   this.setY = y => this.elemento.style.bottom = `${y}px`
+  this.isInvencible = false;
 
-  window.onkeydown = e => voando = true
-  window.onkeyup = e => voando = false
+  window.onkeydown = () => voando = true
+  window.onkeyup = () => voando = false
 
   this.animar = () => {
     const novoY = this.getY() + (voando ? velocidadeDoPersonagem[0] : velocidadeDoPersonagem[1])
@@ -175,6 +224,7 @@ function GameOverDialog(barreiras, passaro, progresso) {
   botaoRestart.onclick = () => {
     barreiras.pares.forEach(e => e.elemento.remove())
     barreiras.moeda.elemento.remove()
+    barreiras.up.elemento.remove()
     passaro.elemento.remove()
     progresso.elemento.remove()
     GameOverDiv.remove()
@@ -189,7 +239,7 @@ function FlappyBird() {
 
   const progresso = new Progresso()
   const barreiras = new Barreiras(altura, largura, aberturaDosCanos, distanciaEntreCanos,
-    (quantDePontos =  incrementoPontuacao) => {
+    (quantDePontos = incrementoPontuacao) => {
       pontosDoGame += parseInt(quantDePontos);
       progresso.atualizarPontos()
     })
@@ -197,9 +247,10 @@ function FlappyBird() {
   const passaro = new Passaro(altura)
 
   areaDoJogo.appendChild(progresso.elemento)
-  areaDoJogo.appendChild(passaro.elemento)
   barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
   areaDoJogo.appendChild(barreiras.moeda.elemento)
+  areaDoJogo.appendChild(barreiras.up.elemento)
+  areaDoJogo.appendChild(passaro.elemento)
 
   updateCenario()
 
