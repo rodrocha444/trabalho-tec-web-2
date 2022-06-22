@@ -1,3 +1,13 @@
+function Item() {
+  this.getX = () => parseInt(this.elemento.style.left.split('px')[0])
+  this.setX = x => this.elemento.style.left = `${x}px`
+  this.setY = y => this.elemento.style.top = `${y}px`
+
+  this.elemento = document.createElement('div');
+  this.elemento.classList.add('itemEspecial');
+  this.elemento.style.backgroundImage = "url('img/moeda.png')";
+}
+
 function novoElemento(tagName, className) {
   const elemento = document.createElement(tagName)
   elemento.className = className
@@ -45,27 +55,42 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
     new ParDeBarreiras(altura, abertura, largura + espaco * 2),
     new ParDeBarreiras(altura, abertura, largura + espaco * 3)
   ]
+  this.moeda = new Item();
 
   const deslocamento = velocidadeDoJogo
   let indexAtual = 0;
+
+  let posicaoInicialMoedaX = this.pares[getRandomIntInclusive(0, 3)].getX() - espaco / 2 + 50;
+  let posicaoInicialMoedaY = getRandomIntInclusive(0, getGame().clientHeight - 50)
+
+  this.moeda.setY(posicaoInicialMoedaY)
+  this.moeda.setX(posicaoInicialMoedaX)
+
   this.animar = () => {
+
+    this.moeda.setX(this.moeda.getX() - deslocamento)
+    if(estaoSobrepostos(getPassaro(),this.moeda.elemento)){
+      this.moeda.setX(this.moeda.getX() + espaco * getRandomIntInclusive(4, 7));
+      notificarPonto(10*incrementoPontuacao)
+    }
+    if (this.moeda.getX() < -50) {
+      this.moeda.setX(this.moeda.getX() + espaco * getRandomIntInclusive(4, 7))
+      this.moeda.setY(getRandomIntInclusive(0, getGame().clientHeight - 50))
+    }
+
     this.pares.forEach((par, index, array) => {
       par.setX(par.getX() - deslocamento)
-
       if (par.getX() < -par.getLargura()) {
         par.setX(par.getX() + espaco * this.pares.length)
         par.sortearAbertura()
       }
-      const posPassaro = Math.floor(getComputedStyle(getPassaro()).getPropertyValue('left').split('px')[0])
+
+      const posPassaro = Math.floor(getComputedStyle(getPassaro()).left.split('px')[0])
 
       if ((posPassaro >= par.getX()) && index == indexAtual) {
-        if (indexAtual < array.length - 1)
-          indexAtual += 1;
-        else
-          indexAtual = 0;
+        indexAtual < (array.length - 1) ? indexAtual += 1 : indexAtual = 0;
         notificarPonto()
       }
-
     })
   }
 }
@@ -130,7 +155,7 @@ function colidiu(passaro, barreiras) {
   return colidiu
 
 }
-function GameOverDialog(barreiras,passaro,progresso) {
+function GameOverDialog(barreiras, passaro, progresso) {
   let GameOverDiv = document.createElement('div')
   let botaoRestart = document.createElement('button')
   let pontuacao = document.createElement('h1')
@@ -140,7 +165,7 @@ function GameOverDialog(barreiras,passaro,progresso) {
   botaoRestart.classList.add('restart')
 
   botaoRestart.innerHTML = "Restart"
-  pontuacao.innerHTML= `${nomeJogador} - ${pontosDoGame} pontos`;
+  pontuacao.innerHTML = `${nomeJogador} - ${pontosDoGame} pontos`;
 
   GameOverDiv.appendChild(pontuacao)
   GameOverDiv.appendChild(botaoRestart)
@@ -149,6 +174,7 @@ function GameOverDialog(barreiras,passaro,progresso) {
 
   botaoRestart.onclick = () => {
     barreiras.pares.forEach(e => e.elemento.remove())
+    barreiras.moeda.elemento.remove()
     passaro.elemento.remove()
     progresso.elemento.remove()
     GameOverDiv.remove()
@@ -163,8 +189,8 @@ function FlappyBird() {
 
   const progresso = new Progresso()
   const barreiras = new Barreiras(altura, largura, aberturaDosCanos, distanciaEntreCanos,
-    () => {
-      pontosDoGame += parseInt(incrementoPontuacao);
+    (quantDePontos =  incrementoPontuacao) => {
+      pontosDoGame += parseInt(quantDePontos);
       progresso.atualizarPontos()
     })
 
@@ -173,6 +199,7 @@ function FlappyBird() {
   areaDoJogo.appendChild(progresso.elemento)
   areaDoJogo.appendChild(passaro.elemento)
   barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
+  areaDoJogo.appendChild(barreiras.moeda.elemento)
 
   updateCenario()
 
@@ -183,8 +210,7 @@ function FlappyBird() {
       if (colidiu(passaro, barreiras) && tipoDeJogo == 'normal') {
         clearInterval(temporizador)
         progresso.elemento.remove()
-        GameOverDialog(barreiras,passaro,progresso)
-        
+        GameOverDialog(barreiras, passaro, progresso)
       }
     }, 20)
   }

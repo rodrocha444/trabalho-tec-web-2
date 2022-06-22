@@ -16,7 +16,7 @@ function updateCenario() {
 
 function updateAberturaCanos() {
   let nivelAbertura = document.querySelector('input[name="abertura-canos-radio"]:checked').value;
-
+  
   nivelAbertura == 'facil' && (aberturaDosCanos = 300)
   nivelAbertura == 'media' && (aberturaDosCanos = 200)
   nivelAbertura == 'dificil' && (aberturaDosCanos = 175)
