@@ -195,12 +195,10 @@ function GameOverDialog(barreiras, passaro, progresso) {
   let pontuacao = novoElemento('h1', 'pontuacao-final')
   let nomeJogador = selectElements('input[name="nome-do-jogador"]').value
 
-  const toAddPai = [pontuacao, botaoRestart]
-
   botaoRestart.innerHTML = "Restart"
   pontuacao.innerHTML = `${nomeJogador} - ${PONTOS_DO_GAME} pontos`;
 
-  addFilhosToPai(GameOverDiv, ...toAddPai)
+  addFilhosToPai(GameOverDiv, pontuacao, botaoRestart)
   addFilhosToPai(game, GameOverDiv)
 
   botaoRestart.onclick = () => {

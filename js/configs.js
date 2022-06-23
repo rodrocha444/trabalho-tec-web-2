@@ -6,6 +6,7 @@ function updateCenario() {
 
   if (TEMA == 'diurno') {
     game.style.background = "var(--background)"
+    barreiras.forEach(e => e.style.filter = "drop-shadow(16px 16px 20px black)")
   }
   else if (TEMA == 'noturno') {
     barreiras.forEach(e => e.style.filter = "drop-shadow(16px 16px 20px black) hue-rotate(90deg) brightness(0.6)")
