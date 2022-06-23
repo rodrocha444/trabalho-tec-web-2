@@ -1,64 +1,74 @@
 function updateCenario() {
-  tema = document.querySelector('input[name="cenario-radio"]:checked').value;
+  TEMA = selectElements('input[name="cenario-radio"]:checked').value;
 
-  let barreiras = getBarreiras()
-  let game = getGame()
+  let barreiras = selectElements('.par-de-barreiras')
+  let game = selectElements('.wm-flappy')
 
-  if (tema == 'diurno') {
-    barreiras.forEach(e => e.style.filter = "drop-shadow(16px 16px 20px black)")
+  if (TEMA == 'diurno') {
     game.style.background = "var(--background)"
   }
-  else if (tema == 'noturno') {
+  else if (TEMA == 'noturno') {
     barreiras.forEach(e => e.style.filter = "drop-shadow(16px 16px 20px black) hue-rotate(90deg) brightness(0.6)")
     game.style.background = "var(--background--dark)"
   }
 }
 
 function updateAberturaCanos() {
-  let nivelAbertura = document.querySelector('input[name="abertura-canos-radio"]:checked').value;
-  
-  nivelAbertura == 'facil' && (aberturaDosCanos = 300)
-  nivelAbertura == 'media' && (aberturaDosCanos = 200)
-  nivelAbertura == 'dificil' && (aberturaDosCanos = 175)
+  let nivelAbertura = selectElements('input[name="abertura-canos-radio"]:checked').value;
 
+  const novaAbertura = {
+    facil: 350,
+    media: 300,
+    dificil: 200,
+  }
+
+  ABERTURA_DOS_CANOS = novaAbertura[nivelAbertura]
 }
 
 function updateDistanciaEntreCanos() {
-  let nivelDistancia = document.querySelector('input[name="distancia-entre-canos-radio"]:checked').value;
+  let nivelDistancia = selectElements('input[name="distancia-entre-canos-radio"]:checked').value;
 
-  nivelDistancia == 'facil' && (distanciaEntreCanos = 500)
-  nivelDistancia == 'media' && (distanciaEntreCanos = 400)
-  nivelDistancia == 'dificil' && (distanciaEntreCanos = 300)
+  const novaDistancia = {
+    facil: 500,
+    media: 400,
+    dificil: 300,
+  }
+
+  DISTANCIA_ENTRE_CANOS = novaDistancia[nivelDistancia]
 }
 
 function updateVelocidadeDoJogo() {
-  let velocidade = document.querySelector('input[name="velocidade-do-jogo"]').value;
+  let velocidade = selectElements('input[name="velocidade-do-jogo"]').value;
 
-  velocidadeDoJogo = velocidade
+  VELOCIDADE_DO_JOGO = velocidade
 }
 
 function updatePersonagem() {
-  let personagem = document.querySelector('select[name="personagem-select"]').value;
+  let personagem = selectElements('select[name="personagem-select"]').value;
 
-  personagemSrc = personagem
+  PERSONAGEM_SRC = personagem
 }
 
 function udpateModoDeJogo() {
-  let modo = document.querySelector('input[name="tipo-de-jogo"]:checked').value;
+  let modo = selectElements('input[name="tipo-de-jogo"]:checked').value;
 
-  tipoDeJogo = modo
+  TIPO_DE_JOGO = modo
 }
 
-function updateVelocidadeDoPersonagem(){
-  let velocidade = document.querySelector('input[name="velocidade-do-personagem-radio"]:checked').value;
+function updateVelocidadeDoPersonagem() {
+  let velocidade = selectElements('input[name="velocidade-do-personagem-radio"]:checked').value;
 
-  velocidade == 'baixa' && (velocidadeDoPersonagem = [3,-3])
-  velocidade == 'media' && (velocidadeDoPersonagem = [8,-5])
-  velocidade == 'alta' && (velocidadeDoPersonagem = [10,-7])
+  const novaVelocidade = {
+    baixa: [3,-3],
+    media: [8,-5],
+    alta: [10,-7]
+  }
+  
+  VELOCIDADE_DO_PERSONAGEM = novaVelocidade[velocidade]
 }
 
 function updateIncrementoPontuacao() {
-  let pontuacao = document.querySelector('input[name="pontuacao-radio"]:checked').value;
+  let pontuacao = selectElements('input[name="pontuacao-radio"]:checked').value;
 
-  incrementoPontuacao = pontuacao
+  INCREMENTO_PONTUACAO = pontuacao
 }

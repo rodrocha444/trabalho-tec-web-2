@@ -1,28 +1,35 @@
-function BackToNormalGame(idTimeout,modo) {
-  clearTimeout(idTimeout);
-  getPassaro().style.filter = ""
-  modo =='treino' || (tipoDeJogo = 'normal')
-  let elemento = document.querySelector('.tempoInvencibilidade')
-  elemento && elemento.remove()
+function BackToNormalGame(isNecessarioMudarModo) {
+  atualizarEstiloPassaro('filter', '');
+  isNecessarioMudarModo && (TIPO_DE_JOGO = 'normal')
+  removerElementos(selectElements('.tempo-invencibilidade-div'))
 }
-function ficarInvencivel(time,modo) {
+
+function addDivDoTempoRestante(time) {
+  const SECOND_IN_MILLISECONDS = 1000
+  let tempoDeInvencibilidadeRestante = novoElemento('h1', 'tempo-de-invencibilidade-restante')
+  let tempoContainer = novoElemento('h1', 'tempo-invencibilidade-div');
+
+  tempoDeInvencibilidadeRestante.innerHTML = time
+  tempoContainer.innerHTML = 'Tempo de Invencibilidade Restante:'
+
+  setInterval(() => { tempoDeInvencibilidadeRestante.innerHTML -= 1 }, SECOND_IN_MILLISECONDS)
+
+  addFilhosToPai(tempoContainer, tempoDeInvencibilidadeRestante)
+  addFilhosToPai(selectElements('.wm-flappy'), tempoContainer)
+}
+
+function ficarInvencivel(time) {
   let timeInMiliseconds = time * 1000
-  let timeElemento = document.createElement('h1');
-  let elemento = document.createElement('h1')
+  let isNecessarioMudarModo = true
 
-  timeElemento.innerHTML = time
-  elemento.innerHTML = 'Tempo de Invencibilidade Restante:'
-  elemento.classList.add('tempoInvencibilidade')
+  addDivDoTempoRestante(time)
 
-  elemento.appendChild(timeElemento)
-  getGame().appendChild(elemento)
+  TIPO_DE_JOGO == 'normal' ? TIPO_DE_JOGO = 'treino' : isNecessarioMudarModo = false;
 
-  setInterval(() => { timeElemento.innerHTML -= 1 }, 1000)
-  tipoDeJogo = 'treino'
-  getPassaro().style.filter = "invert(1)"
+  atualizarEstiloPassaro('filter', 'invert(1)');
 
-  return setTimeout(() => {
-    BackToNormalGame(modo)
+  setTimeout(() => {
+    BackToNormalGame(isNecessarioMudarModo)
   }, timeInMiliseconds)
 }
 
@@ -31,16 +38,9 @@ function Item(img, acao) {
   this.setX = x => this.elemento.style.left = `${x}px`
   this.setY = y => this.elemento.style.top = `${y}px`
 
-  this.elemento = document.createElement('div');
-  this.elemento.classList.add('itemEspecial');
+  this.elemento = novoElemento('div', 'itemEspecial')
   this.elemento.style.backgroundImage = img;
   this.acao = acao
-}
-
-function novoElemento(tagName, className) {
-  const elemento = document.createElement(tagName)
-  elemento.className = className
-  return elemento
 }
 
 function Barreira(reversa = false) {
@@ -51,7 +51,6 @@ function Barreira(reversa = false) {
   this.elemento.appendChild(reversa ? borda : corpo)
 
   this.setAltura = altura => corpo.style.height = `${altura}px`
-
 }
 
 function ParDeBarreiras(altura, abertura, popsicaoNaTela) {
@@ -59,9 +58,8 @@ function ParDeBarreiras(altura, abertura, popsicaoNaTela) {
   this.superior = new Barreira(true)
   this.inferior = new Barreira(false)
 
-  this.elemento.appendChild(this.superior.elemento)
-  this.elemento.appendChild(this.inferior.elemento)
-
+  const toAdd = [this.superior, this.inferior].map(value => value.elemento)
+  addFilhosToPai(this.elemento, ...toAdd)
 
   this.sortearAbertura = () => {
     const alturaSuperior = Math.random() * (altura - abertura)
@@ -78,23 +76,29 @@ function ParDeBarreiras(altura, abertura, popsicaoNaTela) {
 }
 
 function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
-  this.pares = [
-    new ParDeBarreiras(altura, abertura, largura),
-    new ParDeBarreiras(altura, abertura, largura + espaco),
-    new ParDeBarreiras(altura, abertura, largura + espaco * 2),
-    new ParDeBarreiras(altura, abertura, largura + espaco * 3)
-  ]
-  this.moeda = new Item("url('img/moeda.png')", () => notificarPonto(10 * incrementoPontuacao));
-  this.up = new Item("url('img/up.png')", () => ficarInvencivel(tempoDeInvencibilidadeDoPassaro,tipoDeJogo));
 
-  const deslocamento = velocidadeDoJogo
+  this.pares = criarParDeBarreiras(4, { altura, largura, abertura, espaco })
+
+  this.moeda = new Item(
+    "url('img/moeda.png')",
+    () => notificarPonto(10 * INCREMENTO_PONTUACAO)
+  )
+
+  this.up = new Item(
+    "url('img/up.png')",
+    () => ficarInvencivel(TEMPO_INVENCIBILIDADE_PERSONAGEM)
+  )
+
+  const deslocamento = VELOCIDADE_DO_JOGO
+  const alturaDoGame = selectElements('.wm-flappy').clientHeight
+  const tamanhoDosItens = 50
   let indexAtual = 0;
-  let idTimeout = 0;
+
   let posicaoInicialMoedaX = this.pares[getRandomIntInclusive(0, 3)].getX() - espaco / 2 + 50;
-  let posicaoInicialMoedaY = getRandomIntInclusive(0, getGame().clientHeight - 50)
+  let posicaoInicialMoedaY = getRandomIntInclusive(0, alturaDoGame - tamanhoDosItens)
 
   let posicaoInicialUpX = this.pares[getRandomIntInclusive(0, 3)].getX() - espaco / 2 + 50;
-  let posicaoInicialUpY = getRandomIntInclusive(0, getGame().clientHeight - 50)
+  let posicaoInicialUpY = getRandomIntInclusive(0, alturaDoGame - tamanhoDosItens)
 
   this.moeda.setY(posicaoInicialMoedaY)
   this.moeda.setX(posicaoInicialMoedaX)
@@ -103,38 +107,28 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
   this.up.setX(posicaoInicialUpX)
 
   this.animar = () => {
+    [this.moeda, this.up, ...this.pares]
+      .forEach(elemento => deslocar(elemento, deslocamento));
 
-    this.moeda.setX(this.moeda.getX() - deslocamento)
-    if (estaoSobrepostos(getPassaro(), this.moeda.elemento)) {
+    [this.moeda, this.up]
+      .forEach(value => {
+        estaoSobrepostos(selectElements('.passaro'), value.elemento) && handleItens(value, {
+          activeAction: true,
+          espaco,
+        })
+        value.getX() < -tamanhoDosItens && handleItens(value, {
+          activeAction: true,
+          espaco,
+        })
+      })
 
-      this.moeda.acao();
-      this.moeda.setX(this.moeda.getX() + espaco * getRandomIntInclusive(4, 7));
-    }
-    if (this.moeda.getX() < -50) {
-      this.moeda.setX(this.moeda.getX() + espaco * getRandomIntInclusive(4, 7))
-      this.moeda.setY(getRandomIntInclusive(0, getGame().clientHeight - 50))
-    }
-
-    this.up.setX(this.up.getX() - deslocamento)
-    if (estaoSobrepostos(getPassaro(), this.up.elemento)) {
-      BackToNormalGame(idTimeout);
-      idTimeout = this.up.acao()
-      this.up.setX(this.up.getX() + espaco * getRandomIntInclusive(4, 7));
-    }
-    if (this.up.getX() < -50) {
-      this.up.setX(this.up.getX() + espaco * getRandomIntInclusive(4, 7))
-      this.up.setY(getRandomIntInclusive(0, getGame().clientHeight - 50))
-    }
 
     this.pares.forEach((par, index, array) => {
-      par.setX(par.getX() - deslocamento)
       if (par.getX() < -par.getLargura()) {
         par.setX(par.getX() + espaco * this.pares.length)
         par.sortearAbertura()
       }
-
-      const posPassaro = Math.floor(getComputedStyle(getPassaro()).left.split('px')[0])
-
+      const posPassaro = Math.floor(getComputedStyle(selectElements('.passaro')).left.split('px')[0])
       if ((posPassaro >= par.getX()) && index == indexAtual) {
         indexAtual < (array.length - 1) ? indexAtual += 1 : indexAtual = 0;
         notificarPonto()
@@ -147,7 +141,7 @@ function Passaro(alturaJogo) {
   let voando = false
 
   this.elemento = novoElemento('img', 'passaro')
-  this.elemento.src = personagemSrc
+  this.elemento.src = PERSONAGEM_SRC
 
   this.getY = () => parseInt(this.elemento.style.bottom.split('px')[0])
   this.setY = y => this.elemento.style.bottom = `${y}px`
@@ -157,7 +151,7 @@ function Passaro(alturaJogo) {
   window.onkeyup = () => voando = false
 
   this.animar = () => {
-    const novoY = this.getY() + (voando ? velocidadeDoPersonagem[0] : velocidadeDoPersonagem[1])
+    const novoY = this.getY() + (voando ? VELOCIDADE_DO_PERSONAGEM[0] : VELOCIDADE_DO_PERSONAGEM[1])
     const alturaMaxima = alturaJogo - this.elemento.clientWidth
 
     if (novoY <= 0) {
@@ -175,24 +169,13 @@ function Progresso() {
 
   this.elemento = novoElemento('span', 'progresso')
   this.atualizarPontos = () => {
-    this.elemento.innerHTML = pontosDoGame
+    this.elemento.innerHTML = PONTOS_DO_GAME
   }
   this.atualizarPontos(0)
 }
 
-function estaoSobrepostos(elementoA, elementoB) {
-
-  const a = elementoA.getBoundingClientRect()
-  const b = elementoB.getBoundingClientRect()
-  const horizontal = a.left + a.width >= b.left && b.left + b.width >= a.left
-  const vertical = a.top + a.height >= b.top && b.top + b.height >= a.top
-
-  return horizontal && vertical
-}
-
 function colidiu(passaro, barreiras) {
   let colidiu = false
-
   barreiras.pares.forEach(parDeBarreiras => {
     if (!colidiu) {
       const superior = parDeBarreiras.superior.elemento
@@ -202,66 +185,75 @@ function colidiu(passaro, barreiras) {
     }
   })
   return colidiu
-
 }
-function GameOverDialog(barreiras, passaro, progresso) {
-  let GameOverDiv = document.createElement('div')
-  let botaoRestart = document.createElement('button')
-  let pontuacao = document.createElement('h1')
-  let nomeJogador = document.querySelector('input[name="nome-do-jogador"]').value
 
-  GameOverDiv.classList.add('gameover')
-  botaoRestart.classList.add('restart')
+function GameOverDialog(barreiras, passaro, progresso) {
+
+  let game = selectElements('.wm-flappy')
+  let GameOverDiv = novoElemento('div', 'gameover')
+  let botaoRestart = novoElemento('button', 'restart')
+  let pontuacao = novoElemento('h1', 'pontuacao-final')
+  let nomeJogador = selectElements('input[name="nome-do-jogador"]').value
+
+  const toAddPai = [pontuacao, botaoRestart]
 
   botaoRestart.innerHTML = "Restart"
-  pontuacao.innerHTML = `${nomeJogador} - ${pontosDoGame} pontos`;
+  pontuacao.innerHTML = `${nomeJogador} - ${PONTOS_DO_GAME} pontos`;
 
-  GameOverDiv.appendChild(pontuacao)
-  GameOverDiv.appendChild(botaoRestart)
-
-  document.querySelector('.wm-flappy').appendChild(GameOverDiv)
+  addFilhosToPai(GameOverDiv, ...toAddPai)
+  addFilhosToPai(game, GameOverDiv)
 
   botaoRestart.onclick = () => {
-    barreiras.pares.forEach(e => e.elemento.remove())
-    barreiras.moeda.elemento.remove()
-    barreiras.up.elemento.remove()
-    passaro.elemento.remove()
-    progresso.elemento.remove()
-    GameOverDiv.remove()
-    pontosDoGame = 0
+    const elementosParaEliminar = [
+      barreiras.moeda,
+      barreiras.up,
+      passaro,
+      progresso,
+      ...barreiras.pares
+    ].map(value => value.elemento)
+
+    removerElementos(...elementosParaEliminar, GameOverDiv)
+    PONTOS_DO_GAME = 0
+
     new FlappyBird().start()
   }
 }
 function FlappyBird() {
-  const areaDoJogo = document.querySelector('.wm-flappy')
+  const areaDoJogo = selectElements('.wm-flappy')
   const altura = areaDoJogo.clientHeight
   const largura = areaDoJogo.clientWidth
 
   const progresso = new Progresso()
-  const barreiras = new Barreiras(altura, largura, aberturaDosCanos, distanciaEntreCanos,
-    (quantDePontos = incrementoPontuacao) => {
-      pontosDoGame += parseInt(quantDePontos);
+  const barreiras = new Barreiras(altura, largura, ABERTURA_DOS_CANOS, DISTANCIA_ENTRE_CANOS,
+    (quantDePontos = INCREMENTO_PONTUACAO) => {
+      PONTOS_DO_GAME += parseInt(quantDePontos);
       progresso.atualizarPontos()
     })
 
   const passaro = new Passaro(altura)
 
-  areaDoJogo.appendChild(progresso.elemento)
-  barreiras.pares.forEach(par => areaDoJogo.appendChild(par.elemento))
-  areaDoJogo.appendChild(barreiras.moeda.elemento)
-  areaDoJogo.appendChild(barreiras.up.elemento)
-  areaDoJogo.appendChild(passaro.elemento)
+  const toAdd = [
+    ...barreiras.pares,
+    progresso,
+    barreiras.moeda,
+    barreiras.up,
+    passaro,
+  ].map(value => value.elemento)
 
+  addFilhosToPai(areaDoJogo, ...toAdd)
   updateCenario()
 
   this.start = () => {
     const temporizador = setInterval(() => {
-      barreiras.animar()
-      passaro.animar()
-      if (colidiu(passaro, barreiras) && tipoDeJogo == 'normal') {
+
+      [barreiras, passaro].forEach(cadaUm => cadaUm.animar())
+
+      if (colidiu(passaro, barreiras) && TIPO_DE_JOGO == 'normal') {
+
         clearInterval(temporizador)
-        progresso.elemento.remove()
+        removerElementos(progresso.elemento)
         GameOverDialog(barreiras, passaro, progresso)
+
       }
     }, 20)
   }
