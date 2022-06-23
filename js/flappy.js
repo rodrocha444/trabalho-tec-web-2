@@ -117,7 +117,7 @@ function Barreiras(altura, largura, abertura, espaco, notificarPonto) {
           espaco,
         })
         value.getX() < -tamanhoDosItens && handleItens(value, {
-          activeAction: true,
+          activeAction: false,
           espaco,
         })
       })
