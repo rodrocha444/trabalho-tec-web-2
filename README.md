@@ -1,5 +1,5 @@
 # Trabalho Prático Tec. Web. 2
-
+[Roteiro do Trabalho](TrabalhoPratico2_%20tecWeb.pdf)
 ## Questão 01
 ---
 Formulário criado ao lado do *game* assim não precisando de requisições, apenas de atualização de configurações com base nos dados dos *inputs*
